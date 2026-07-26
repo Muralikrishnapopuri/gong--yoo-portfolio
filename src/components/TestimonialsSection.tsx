@@ -2,26 +2,27 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playSound } from "@/utils/sound";
 
 const testimonials = [
   {
-    name: "Sarah Kim",
-    role: "Product Manager, NexaCloud Solutions",
-    quote: "Gong Yoo is simply the best developer I've worked with. He understands the product vision and translates it into flawless code. His attention to detail and speed of delivery are unmatched.",
+    name: "Deva",
+    role: "Engineering Lead, YoungMinds Tech Solutions",
+    quote: "Murali's work on RestoSoft POS was a masterclass in offline-first systems. He designed the SQLite local replication engine and silent thermal printing queue, resulting in zero-latency billing operations with zero internet.",
     avatar: "👤",
     glow: "rgba(232, 168, 73, 0.2)"
   },
   {
-    name: "David Chen",
-    role: "CTO, BrightByte Agency",
-    quote: "Gong has a rare combination of deep technical skill and excellent communication. He owned entire features end to end and always delivered above expectations.",
+    name: "Vamsi",
+    role: "Project Manager, YoungMinds Tech Solutions",
+    quote: "Murali is a highly resourceful full-stack engineer. He delivered our 4 role-based web modules on time, and his real-time order updates system using long polling was extremely stable.",
     avatar: "👤",
     glow: "rgba(62, 232, 181, 0.2)"
   },
   {
-    name: "Priya Nair",
-    role: "UI/UX Designer, BrightByte Agency",
-    quote: "Working with Gong was a pleasure. He implemented my designs with precision and even suggested improvements that made the product better. A true full stack master.",
+    name: "Anjali Rao",
+    role: "CS Advisor, Amrita Sai CS Department",
+    quote: "Murali is a dedicated problem solver. His contribution as a Chegg Subject Matter Expert resolving 150+ complex web queries shows his deep mastery of algorithms and software engineering.",
     avatar: "👤",
     glow: "rgba(232, 90, 110, 0.2)"
   }
@@ -34,7 +35,11 @@ export default function TestimonialsSection() {
   useEffect(() => {
     if (!isAutoPlaying) return;
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      setActiveIndex((prev) => {
+        const next = (prev + 1) % testimonials.length;
+        playSound("hover");
+        return next;
+      });
     }, 5000);
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
@@ -42,11 +47,13 @@ export default function TestimonialsSection() {
   const handleNext = () => {
     setIsAutoPlaying(false);
     setActiveIndex((prev) => (prev + 1) % testimonials.length);
+    playSound("click");
   };
 
   const handlePrev = () => {
     setIsAutoPlaying(false);
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    playSound("click");
   };
 
 

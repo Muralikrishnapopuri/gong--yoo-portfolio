@@ -3,35 +3,36 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { playSound } from "@/utils/sound";
 
 const projects = [
   {
     id: 1,
-    name: "ShopSphere",
-    letter: "S",
-    description: "A full-featured e-commerce platform with product management, cart, checkout, payment integration (Stripe), order tracking, and admin dashboard.",
-    tech: ["Next.js", "Node.js", "MongoDB", "Tailwind CSS"]
+    name: "RestoSoft Offline POS",
+    letter: "R",
+    description: "An offline-first Windows POS system featuring local LAN synchronization, bidirectionally replicated cloud databases, and hardware-level silent thermal printing.",
+    tech: ["Electron", "React", "TypeScript", "Node.js", "SQLite"]
   },
   {
     id: 2,
-    name: "DevCollab",
-    letter: "D",
-    description: "A real-time collaborative code editor for teams, supporting multiple languages, live cursor sync, and chat.",
-    tech: ["React", "Socket.io", "Monaco Editor", "Express"]
+    name: "Zestchat Messenger",
+    letter: "Z",
+    description: "A real-time messaging application featuring custom database architectures (connection pools), Sharp media compression, guest session cleanup cron jobs, and custom emoji integrations.",
+    tech: ["React", "Redux", "Node.js", "Express", "PostgreSQL", "Cloudinary"]
   },
   {
     id: 3,
-    name: "TaskFlow",
-    letter: "T",
-    description: "A project management app inspired by Trello, with drag-and-drop boards, team workspaces, role-based access control, and deadline tracking.",
-    tech: ["React", "Redux", "Node.js", "PostgreSQL"]
+    name: "Pixel Polish Editor",
+    letter: "P",
+    description: "A real-time client-side image editor performing fast canvas operations under 50ms, backed by robust uploads and cloud-based file delivery.",
+    tech: ["React.js", "HTML5 Canvas", "Express", "Multer", "Cloudinary"]
   },
   {
     id: 4,
-    name: "WeatherNow",
-    letter: "W",
-    description: "A weather forecasting web app with geolocation, 7-day forecasts, and animated weather visuals.",
-    tech: ["React", "OpenWeatherMap API"]
+    name: "Beverage E-Commerce",
+    letter: "B",
+    description: "A responsive beverage e-commerce platform featuring secure user flows, order processing, MongoDB document queries, and API endpoints.",
+    tech: ["React", "Node.js", "Express", "MongoDB", "REST APIs"]
   }
 ];
 
@@ -78,8 +79,8 @@ export default function ProjectsSection() {
       <div className="content-wrapper w-full">
         <div className="section-divider mb-16 mx-auto md:mx-0" />
         
-        <p className="projects-label">05. Creative Works</p>
-        <h2 className="projects-title text-gradient-primary mb-16">Projects Showcase</h2>
+        <p className="projects-label">05. Inventory Vault</p>
+        <h2 className="projects-title text-gradient-primary mb-16">Legendary Gear & Projects</h2>
 
         <div className="projects-layout-grid">
           
@@ -137,8 +138,12 @@ export default function ProjectsSection() {
                     stiffness: 85,
                     damping: 16,
                   }}
-                  onMouseEnter={() => setHoveredIndex(i)}
+                  onMouseEnter={() => {
+                    setHoveredIndex(i);
+                    playSound("hover");
+                  }}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => playSound("select")}
                   className="experience-carousel-card glassmorphic-card rounded-2xl overflow-hidden flex flex-col justify-center items-center cursor-pointer border border-[rgba(255,255,255,0.08)] shadow-lg"
                 >
                   <AnimatePresence mode="wait">
@@ -167,7 +172,7 @@ export default function ProjectsSection() {
                       >
                         <div className="w-full">
                           <span className="text-[10px] font-mono text-[var(--accent-secondary)] uppercase tracking-widest mb-1 block">
-                            Project {project.id}
+                            EQUIPMENT SLOT {project.id}
                           </span>
                           <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">
                             {project.name}
@@ -195,8 +200,8 @@ export default function ProjectsSection() {
           <div className="projects-image-col flex items-center justify-center">
             <div className="projects-image-container">
               <Image
-                src="/Pic_5.jpeg"
-                alt="Gong Yoo — Projects Accent"
+                src="/inventory_vault.jpg"
+                alt="Murali Krishna — Projects Accent"
                 fill
                 sizes="(max-width: 1024px) 320px, 320px"
                 className="object-cover"

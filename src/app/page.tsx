@@ -10,6 +10,7 @@ import ProjectsSection from "@/components/ProjectsSection";
 import EducationSection from "@/components/EducationSection";
 import CertificationsSection from "@/components/CertificationsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import SocialSection from "@/components/SocialSection";
 import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
@@ -44,6 +45,9 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <TestimonialsSection />
+
+      {/* Social Section */}
+      <SocialSection />
 
       {/* Contact Section */}
       <ContactSection />

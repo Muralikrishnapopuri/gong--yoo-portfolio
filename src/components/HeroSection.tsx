@@ -2,19 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
+import { playSound } from "@/utils/sound";
 
 /* ─── Floating Code Snippets ─── */
 const codeSnippets = [
-  { text: 'const developer = "Gong Yoo";', x: "5%", y: "15%", delay: 0 },
-  { text: "async function buildApp() {", x: "75%", y: "10%", delay: 2 },
-  { text: "  return <Portfolio />", x: "80%", y: "55%", delay: 4 },
-  { text: "npm run deploy --prod", x: "8%", y: "70%", delay: 6 },
-  { text: "git commit -m 'perfection'", x: "65%", y: "80%", delay: 3 },
-  { text: "export default function Hero()", x: "12%", y: "42%", delay: 5 },
-  { text: "const stack = [React, Next, Node]", x: "70%", y: "35%", delay: 1 },
-  { text: "// building the future", x: "3%", y: "88%", delay: 7 },
+  { text: 'const dev = "Murali Krishna";', x: "5%", y: "15%", delay: 0 },
+  { text: "async function deployRestoSoft() {", x: "75%", y: "10%", delay: 2 },
+  { text: "  return await ElectronApp.sync();", x: "80%", y: "55%", delay: 4 },
+  { text: "npm run sync-db --local", x: "8%", y: "70%", delay: 6 },
+  { text: "git commit -m 'offline-first POS sync'", x: "65%", y: "80%", delay: 3 },
+  { text: "export default function CharacterSheet()", x: "12%", y: "42%", delay: 5 },
+  { text: "const inventory = [React, TS, Electron]", x: "70%", y: "35%", delay: 1 },
+  { text: "// offline billing works with 0% internet", x: "3%", y: "88%", delay: 7 },
 ];
 
 /* ─── Particle System ─── */
@@ -74,82 +75,232 @@ function TerminalWidget() {
 
   const lines = [
     { prompt: true, text: "whoami" },
-    { prompt: false, text: "Gong Yoo — Full Stack Developer" },
-    { prompt: true, text: "cat skills.json" },
-    { prompt: false, text: '{ "frontend": "React, Next.js, TS" }' },
-    { prompt: false, text: '{ "backend": "Node.js, Python, Go" }' },
+    { prompt: false, text: "Murali Krishna Popuri — Full Stack Developer" },
+    { prompt: true, text: "cat tech_stack.json" },
+    { prompt: false, text: '{ "languages": "JavaScript, TypeScript, PHP, SQL" }' },
+    { prompt: false, text: '{ "frontend_desktop": "React, Next.js, Electron, Redux" }' },
+    { prompt: false, text: '{ "backend_db": "Node.js, Express, SQLite, Postgres, Redis" }' },
+    { prompt: true, text: "cat current_quest.sh" },
+    { prompt: false, text: "Building offline-first POS systems at YoungMinds Tech" },
     { prompt: true, text: "echo $STATUS" },
-    { prompt: false, text: "✓ Available for hire", isGreen: true },
+    { prompt: false, text: "✓ Ready to deploy & collaborate", isGreen: true },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setVisibleLines((prev) => {
         if (prev >= lines.length) {
-          setTimeout(() => setVisibleLines(0), 2000);
+          setTimeout(() => setVisibleLines(0), 4000);
           return prev;
         }
         return prev + 1;
       });
-    }, 600);
+    }, 800);
     return () => clearInterval(interval);
   }, [lines.length]);
 
   return (
-    <motion.div
-      className="terminal-widget w-full"
+    <div className="terminal-body font-mono text-xs flex-1 flex flex-col gap-4 p-6 sm:p-8 overflow-y-auto leading-relaxed select-none">
+      {lines.slice(0, visibleLines).map((line, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex items-start gap-3"
+        >
+          {line.prompt ? (
+            <>
+              <span className="text-[var(--accent-secondary)] font-bold">❯</span>
+              <span className="text-[var(--text-primary)]">{line.text}</span>
+            </>
+          ) : (
+            <span
+              className="ml-6"
+              style={{
+                color: line.isGreen
+                  ? "var(--accent-secondary)"
+                  : "var(--text-secondary)",
+              }}
+            >
+              {line.text}
+            </span>
+          )}
+        </motion.div>
+      ))}
+      {visibleLines < lines.length && (
+        <span
+          className="inline-block w-2.5 h-4.5 ml-6 shrink-0"
+          style={{
+            background: "var(--accent-primary)",
+            animation: "typewriter-cursor 1s ease-in-out infinite",
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ─── Character Attributes Widget ─── */
+function StatsWidget() {
+  const [stats, setStats] = useState({
+    STR: 25, // Backend
+    DEX: 23, // DB
+    INT: 27, // Frontend/Desktop
+    VIT: 26, // LAN/Sync
+    LCK: 22, // Messaging
+  });
+  const [points, setPoints] = useState(5);
+  const [hoveredStat, setHoveredStat] = useState<string | null>(null);
+
+  const adjustStat = (stat: keyof typeof stats, amount: number) => {
+    const minValues = { STR: 25, DEX: 23, INT: 27, VIT: 26, LCK: 22 };
+    if (amount > 0 && points > 0) {
+      setStats(prev => ({ ...prev, [stat]: prev[stat] + 1 }));
+      setPoints(prev => prev - 1);
+      playSound("click");
+    } else if (amount < 0 && stats[stat] > minValues[stat]) {
+      setStats(prev => ({ ...prev, [stat]: prev[stat] - 1 }));
+      setPoints(prev => prev + 1);
+      playSound("click");
+    }
+  };
+
+  const getStatInfo = (stat: string) => {
+    switch (stat) {
+      case "STR": return { name: "STR [Backend]", desc: "Strength: Node.js, Express, PHP, REST APIs. Handles heavy server workloads." };
+      case "DEX": return { name: "DEX [Databases]", desc: "Dexterity: PostgreSQL, SQLite, MongoDB, Redis. Optimizes query execution speeds." };
+      case "INT": return { name: "INT [Frontend]", desc: "Intelligence: React.js, Next.js, Redux, Electron. Unlocks desktop engineering." };
+      case "VIT": return { name: "VIT [Systems]", desc: "Vitality: LAN architecture, Thermal printing, sync engines. Zero internet stability." };
+      case "LCK": return { name: "LCK [Critical]", desc: "Luck: WebSockets real-time chat, Chegg debugging, Agile teamwork." };
+      default: return { name: "", desc: "" };
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-5 w-full p-6 sm:p-8 select-none">
+      <div className="flex justify-between items-center border-b border-[rgba(255,255,255,0.06)] pb-3 mb-1">
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-[var(--accent-secondary)] font-mono">CHARACTER SHEET</span>
+          <span className="text-[10px] text-[var(--text-secondary)] font-mono">Distribute points to upgrade stats</span>
+        </div>
+        <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded">
+          POINTS: {points}
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        {(Object.keys(stats) as Array<keyof typeof stats>).map((key) => {
+          const info = getStatInfo(key);
+          const val = stats[key];
+          const maxVal = 32;
+          const percentage = (val / maxVal) * 100;
+          return (
+            <div 
+              key={key} 
+              className="flex flex-col gap-2 cursor-help"
+              onMouseEnter={() => {
+                setHoveredStat(key);
+                playSound("hover");
+              }}
+              onMouseLeave={() => setHoveredStat(null)}
+            >
+              <div className="flex justify-between items-center text-xs font-mono">
+                <span className="text-[var(--text-primary)] font-semibold">{info.name}</span>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => adjustStat(key, -1)}
+                    className="w-4 h-4 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 active:scale-90 text-[10px] font-bold rounded border border-zinc-700 cursor-pointer"
+                  >
+                    -
+                  </button>
+                  <span className="w-5 text-center font-bold text-[var(--accent-primary)]">{val}</span>
+                  <button 
+                    onClick={() => adjustStat(key, 1)}
+                    className="w-4 h-4 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 active:scale-90 text-[10px] font-bold rounded border border-zinc-700 cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="h-2 w-full bg-zinc-900 rounded overflow-hidden border border-zinc-800">
+                <div 
+                  className="h-full bg-[var(--accent-primary)] rounded transition-all duration-300" 
+                  style={{ width: `${percentage}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Tooltip detail description */}
+      <div className="min-h-[50px] border-t border-[rgba(255,255,255,0.06)] pt-4.5 text-[11px] font-mono text-[var(--text-secondary)] leading-relaxed">
+        {hoveredStat ? (
+          <div>
+            <span className="text-[var(--accent-secondary)] font-bold">{getStatInfo(hoveredStat).name}: </span>
+            <span>{getStatInfo(hoveredStat).desc}</span>
+          </div>
+        ) : (
+          <span className="italic text-[var(--text-muted)]">Hover over attributes to view descriptions.</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── RPG Tabbed Dashboard Panel ─── */
+function RPGDetailsPanel() {
+  const [activeTab, setActiveTab] = useState<"terminal" | "stats">("stats");
+
+  return (
+    <motion.div 
+      className="terminal-widget w-full flex flex-col min-h-[420px] border border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,15,0.6)] backdrop-blur-md rounded-xl overflow-hidden"
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: 1.8, duration: 0.8 }}
     >
-      <div className="terminal-header">
-        <div className="terminal-dot" style={{ background: "#e85a6e" }} />
-        <div className="terminal-dot" style={{ background: "#e8a849" }} />
-        <div className="terminal-dot" style={{ background: "#3ee8b5" }} />
+      <div className="terminal-header flex justify-between items-center px-6 py-4 border-b border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,15,0.4)]">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="terminal-dot" style={{ background: "#e85a6e" }} />
+          <div className="terminal-dot" style={{ background: "#e8a849" }} />
+          <div className="terminal-dot" style={{ background: "#3ee8b5" }} />
+        </div>
+
+        {/* Tab Buttons */}
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => { setActiveTab("stats"); playSound("click"); }}
+            className={`text-[9px] font-mono px-2 py-0.5 rounded cursor-pointer transition-all ${
+              activeTab === "stats"
+                ? "bg-[rgba(62,232,181,0.15)] text-[var(--accent-secondary)] border border-[rgba(62,232,181,0.25)]"
+                : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+            }`}
+          >
+            [ATTRIBUTES]
+          </button>
+          <button
+            onClick={() => { setActiveTab("terminal"); playSound("click"); }}
+            className={`text-[9px] font-mono px-2 py-0.5 rounded cursor-pointer transition-all ${
+              activeTab === "terminal"
+                ? "bg-[rgba(232,168,73,0.15)] text-[var(--accent-primary)] border border-[rgba(232,168,73,0.25)]"
+                : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+            }`}
+          >
+            [CONSOLE_LOG]
+          </button>
+        </div>
+
         <span
-          className="ml-3 text-xs"
+          className="text-[9px] hidden sm:inline"
           style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}
         >
-          gongyoo@dev ~
+          murali@rpg-core ~
         </span>
       </div>
-      <div className="terminal-body">
-        {lines.slice(0, visibleLines).map((line, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex items-start gap-2"
-          >
-            {line.prompt ? (
-              <>
-                <span style={{ color: "var(--accent-secondary)" }}>❯</span>
-                <span style={{ color: "var(--text-primary)" }}>{line.text}</span>
-              </>
-            ) : (
-              <span
-                className="ml-4"
-                style={{
-                  color: line.isGreen
-                    ? "var(--accent-secondary)"
-                    : "var(--text-secondary)",
-                }}
-              >
-                {line.text}
-              </span>
-            )}
-          </motion.div>
-        ))}
-        {visibleLines < lines.length && (
-          <span
-            className="inline-block w-2 h-4 ml-4"
-            style={{
-              background: "var(--accent-primary)",
-              animation: "typewriter-cursor 1s ease-in-out infinite",
-            }}
-          />
-        )}
+
+      <div className="flex-1 flex flex-col bg-[rgba(10,10,15,0.15)]">
+        {activeTab === "terminal" ? <TerminalWidget /> : <StatsWidget />}
       </div>
     </motion.div>
   );
@@ -280,14 +431,14 @@ export default function HeroSection() {
   }, []);
 
   const techStack = [
-    "React",
+    "React.js",
     "Next.js",
+    "Electron",
     "TypeScript",
     "Node.js",
-    "Python",
+    "Express.js",
     "PostgreSQL",
-    "Docker",
-    "AWS",
+    "SQLite",
   ];
 
   return (
@@ -423,12 +574,12 @@ export default function HeroSection() {
             <div className="flex items-center gap-x-4 mb-1 overflow-hidden">
               <h1
                 ref={titleRef}
-                className="hero-title-line hero-name"
+                className="hero-title-line hero-name font-bold"
               >
-                <span className="text-gradient-primary text-glow">Gong</span>
+                <span className="text-gradient-primary text-glow">Murali</span>
               </h1>
-              <h1 className="hero-title-line hero-name">
-                <span className="text-gradient-warm text-glow">Yoo</span>
+              <h1 className="hero-title-line hero-name font-bold">
+                <span className="text-gradient-warm text-glow">Krishna</span>
                 <span className="hero-name-dot" />
               </h1>
             </div>
@@ -441,16 +592,14 @@ export default function HeroSection() {
               <p className="hero-title-line hero-subtitle">
                 Full Stack{" "}
                 <span className="text-gradient-cool" style={{ fontWeight: 500 }}>
-                  Web Developer
+                  Developer & Systems Engineer
                 </span>
               </p>
             </div>
 
             {/* Bio */}
             <p className="hero-bio hero-bio-text">
-              Crafting powerful web experiences from front to back. I build fast,
-              scalable, and user-friendly web applications with mastery of both
-              client-side and server-side technologies.
+              Results-driven Full-Stack Developer with 2 years of professional experience building scalable desktop systems, real-time web applications, and hybrid offline-first restaurant ecosystems.
             </p>
 
             {/* CTA Buttons */}
@@ -460,6 +609,7 @@ export default function HeroSection() {
                 className="hero-btn btn-primary"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => playSound("click")}
               >
                 <svg
                   width="16"
@@ -471,13 +621,14 @@ export default function HeroSection() {
                 >
                   <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                 </svg>
-                View Projects
+                Inspect Gear
               </motion.a>
               <motion.a
                 href="#contact"
                 className="hero-btn btn-outline"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => playSound("click")}
               >
                 <svg
                   width="16"
@@ -490,7 +641,7 @@ export default function HeroSection() {
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
-                Get In Touch
+                Send Message Scroll
               </motion.a>
             </div>
 
@@ -501,6 +652,7 @@ export default function HeroSection() {
                   key={tech}
                   className="hero-tech tech-tag"
                   whileHover={{ scale: 1.08, y: -2 }}
+                  onMouseEnter={() => playSound("hover")}
                 >
                   <span
                     style={{ color: "var(--accent-primary)", fontSize: "0.5rem" }}
@@ -517,7 +669,7 @@ export default function HeroSection() {
           <div className="hero-visual flex flex-col md:flex-row items-center gap-8 w-full md:max-w-[760px]">
             {/* Image */}
             <div
-              className="hero-image-gsap hero-image-wrap"
+              className="hero-image-gsap hero-image-wrap shrink-0"
               ref={imageRef}
               style={{ transformStyle: "preserve-3d" }}
             >
@@ -528,8 +680,8 @@ export default function HeroSection() {
 
               <div className="hero-image-container">
                 <Image
-                  src="/Main_pic.jpeg"
-                  alt="Gong Yoo — Full Stack Web Developer"
+                  src="/main_inside_status_section.jpg"
+                  alt="Murali Krishna Popuri — Full Stack Developer"
                   fill
                   priority
                   className="object-cover"
@@ -562,13 +714,13 @@ export default function HeroSection() {
                     letterSpacing: "0.05em",
                   }}
                 >
-                  {"{ "}Seoul, KR{" }"}
+                  {"{ "}Vijayawada, IN {" }"}
                 </span>
               </motion.div>
             </div>
 
-            {/* Terminal Widget */}
-            <TerminalWidget />
+            {/* RPG tabbed panel */}
+            <RPGDetailsPanel />
           </div>
         </div>
 
@@ -580,10 +732,10 @@ export default function HeroSection() {
           transition={{ delay: 2, duration: 0.8 }}
         >
           {[
-            { value: "6+", label: "Years Experience" },
-            { value: "50K+", label: "Users Served" },
-            { value: "15+", label: "Projects Built" },
-            { value: "5", label: "Certifications" },
+            { value: "2+", label: "Years Experience" },
+            { value: "100%", label: "Offline POS Uptime" },
+            { value: "4", label: "Role-based Web Apps" },
+            { value: "150+", label: "CS Queries Resolved" },
           ].map((stat) => (
             <div key={stat.label} className="hero-stat-item">
               <p className="hero-stat-value text-gradient-primary">

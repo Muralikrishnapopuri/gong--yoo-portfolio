@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playSound } from "@/utils/sound";
 
 export default function EducationSection() {
   const [pageIndex, setPageIndex] = useState(0); // 0 = Spread 1, 1 = Spread 2
@@ -11,7 +12,11 @@ export default function EducationSection() {
   useEffect(() => {
     if (!isAutoTurning) return;
     const interval = setInterval(() => {
-      setPageIndex((prev) => (prev === 0 ? 1 : 0));
+      setPageIndex((prev) => {
+        const nextIdx = prev === 0 ? 1 : 0;
+        playSound("hover");
+        return nextIdx;
+      });
     }, 6000);
     return () => clearInterval(interval);
   }, [isAutoTurning]);
@@ -20,12 +25,14 @@ export default function EducationSection() {
   const turnNext = () => {
     setIsAutoTurning(false);
     setPageIndex(1);
+    playSound("click");
   };
 
   // Turn page backward
   const turnPrev = () => {
     setIsAutoTurning(false);
     setPageIndex(0);
+    playSound("click");
   };
 
   return (
@@ -54,24 +61,24 @@ export default function EducationSection() {
                         Higher Education
                       </span>
                       <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight mb-2">
-                        Bachelor of Science in Computer Science
+                        Bachelor of Technology in Computer Science
                       </h3>
                       <p className="text-sm font-semibold text-[var(--accent-secondary)] mb-4">
-                        Seoul National University
+                        Amrita Sai Institute of Science & Technology
                       </p>
                     </div>
 
                     <div className="border-t border-[rgba(255,255,255,0.06)] pt-4 flex-1">
                       <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-3">
-                        Focused on software engineering, algorithms, databases, and web technologies.
+                        Focused on software engineering, data structures, database management systems, and core computer science fundamentals.
                       </p>
                       <span className="inline-block text-[10px] font-mono bg-[rgba(62,232,181,0.1)] text-[var(--accent-secondary)] py-1 px-3 rounded-full border border-[rgba(62,232,181,0.15)]">
-                        Graduated with honors
+                        CGPA: 7.35 / 10
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center text-[10px] font-mono text-[var(--text-muted)] mt-4">
-                      <span>2014 – 2018</span>
+                      <span>2019 – 2023</span>
                       <span>Page 01</span>
                     </div>
                   </div>
@@ -85,10 +92,10 @@ export default function EducationSection() {
                         Practical Application
                       </span>
                       <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight mb-2">
-                        Engineering Highlights
+                        Technical Milestones
                       </h3>
                       <p className="text-sm font-semibold text-[var(--accent-primary)] mb-4">
-                        Modern Tech Systems
+                        Offline-First Systems
                       </p>
                     </div>
 
@@ -96,21 +103,21 @@ export default function EducationSection() {
                       <ul className="flex flex-col gap-2.5 text-xs text-[var(--text-secondary)]">
                         <li className="flex gap-2">
                           <span className="text-[var(--accent-primary)]">✔</span>
-                          AWS Certified Solutions Architect (Associate)
+                          Developed RestoSoft POS operating offline with zero internet
                         </li>
                         <li className="flex gap-2">
                           <span className="text-[var(--accent-primary)]">✔</span>
-                          Deep dive: Concurrent programming in Go and Rust
+                          Resolved 150+ queries as Chegg CS Subject Matter Expert
                         </li>
                         <li className="flex gap-2">
                           <span className="text-[var(--accent-primary)]">✔</span>
-                          Contributor to 10+ open-source tools
+                          Built real-time messaging structures with custom pools
                         </li>
                       </ul>
                     </div>
 
                     <div className="flex justify-between items-center text-[10px] font-mono text-[var(--text-muted)] mt-4">
-                      <span>Self-Guided</span>
+                      <span>Self-Guided Quest</span>
                       <span>Page 04</span>
                     </div>
                   </div>
@@ -139,10 +146,10 @@ export default function EducationSection() {
                           Academic Note
                         </span>
                         <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight mb-2">
-                          Highlight Details
+                          Core Focus Areas
                         </h3>
                         <p className="text-sm font-semibold text-[var(--text-secondary)] mb-4">
-                          GPA: 3.92 / 4.00
+                          Amrita Sai CS Dept
                         </p>
                       </div>
 
@@ -150,15 +157,15 @@ export default function EducationSection() {
                         <ul className="flex flex-col gap-2.5 text-xs text-[var(--text-secondary)]">
                           <li className="flex gap-2">
                             <span className="text-[var(--accent-primary)]">★</span>
-                            Dean&apos;s List Honors (All Semesters)
+                            Distributed LAN networks & real-time sync systems
                           </li>
                           <li className="flex gap-2">
                             <span className="text-[var(--accent-primary)]">★</span>
-                            Research Project: High-performance real-time DOM diffing compiler
+                            Relational database schema indexing & structure
                           </li>
                           <li className="flex gap-2">
                             <span className="text-[var(--accent-primary)]">★</span>
-                            Specialized: Distributed systems and web rendering
+                            High-speed dynamic filters (HTML5 Canvas)
                           </li>
                         </ul>
                       </div>
@@ -185,24 +192,24 @@ export default function EducationSection() {
                           Continuous Learning
                         </span>
                         <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight mb-2">
-                          Advanced Certifications
+                          Real-World Deployments
                         </h3>
                         <p className="text-sm font-semibold text-[var(--accent-secondary)] mb-4">
-                          Stanford & AWS Specializations
+                          RestoSoft & Zestchat Specializations
                         </p>
                       </div>
 
                       <div className="border-t border-[rgba(255,255,255,0.06)] pt-4 flex-1">
                         <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-3">
-                          AWS Certified Cloud Architecture, Stanford Algorithms, and modern web application scaling patterns.
+                          Successfully built and deployed live apps (zestchat.vercel.app, pixelpolish.vercel.app, biz.restosoftindia.in) demonstrating expert integration of Node, React, and local environments.
                         </p>
                         <span className="inline-block text-[10px] font-mono bg-[rgba(232,168,73,0.1)] text-[var(--accent-primary)] py-1 px-3 rounded-full border border-[rgba(232,168,73,0.15)]">
-                          Ongoing Development
+                          Production Ready
                         </span>
                       </div>
 
                       <div className="flex justify-between items-center text-[10px] font-mono text-[var(--text-muted)] mt-4">
-                        <span>2019 – 2021</span>
+                        <span>2019 – Present</span>
                         <span>Page 03</span>
                       </div>
                     </div>

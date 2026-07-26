@@ -2,31 +2,56 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playSound } from "@/utils/sound";
 
 export default function ContactSection() {
   const [copied, setCopied] = useState(false);
   const [formState, setFormState] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const copyEmail = () => {
-    navigator.clipboard.writeText("gongyoo.dev@gmail.com");
+    navigator.clipboard.writeText("popurimurali16@gmail.com");
     setCopied(true);
+    playSound("select");
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formState.name || !formState.email || !formState.message) return;
 
+    playSound("click");
     setIsSubmitting(true);
-    // Simulate submission delay
-    setTimeout(() => {
+    setErrorMessage("");
+    setSubmitSuccess(false);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSubmitSuccess(true);
+        playSound("levelUp");
+        setFormState({ name: "", email: "", message: "" });
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        setErrorMessage(data.error || "Failed to dispatch email. SMTP not configured.");
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("An unexpected error occurred. Check backend network.");
+    } finally {
       setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFormState({ name: "", email: "", message: "" });
-      setTimeout(() => setSubmitSuccess(false), 4500);
-    }, 1500);
+    }
   };
 
   return (
@@ -112,7 +137,17 @@ export default function ContactSection() {
                       exit={{ opacity: 0 }}
                       className="text-xs font-mono text-[var(--accent-secondary)] mt-2 text-center"
                     >
-                      ✓ Message transmitted successfully! I will reach out soon.
+                      ✓ Message transmitted successfully!
+                    </motion.div>
+                  )}
+                  {errorMessage && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="text-xs font-mono text-[var(--accent-tertiary)] mt-2 text-center"
+                    >
+                      ⚠ {errorMessage}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -124,9 +159,9 @@ export default function ContactSection() {
           <div className="contact-details-container flex flex-col gap-6">
             <div className="glassmorphic-card p-8 rounded-2xl border border-[rgba(255,255,255,0.05)] w-full flex-1 flex flex-col justify-between">
               <div>
-                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2"> Gong Yoo </h3>
+                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2"> Murali Krishna Popuri </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-8">
-                  Have a project in mind or want to collaborate? I&apos;d love to hear from you.
+                  Have a quest in mind or want to collaborate on hybrid, offline-first architectures? I&apos;d love to connect.
                 </p>
 
                 <div className="flex flex-col gap-5">
@@ -137,7 +172,7 @@ export default function ContactSection() {
                       <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">Email Address</span>
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-semibold text-[var(--text-primary)]">
-                          gongyoo.dev@gmail.com
+                          popurimurali16@gmail.com
                         </span>
                         <button
                           onClick={copyEmail}
@@ -149,13 +184,24 @@ export default function ContactSection() {
                     </div>
                   </div>
 
+                  {/* Phone */}
+                  <div className="flex items-start gap-4">
+                    <span className="text-xl">📞</span>
+                    <div>
+                      <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">Phone Contact</span>
+                      <span className="text-sm font-semibold text-[var(--text-primary)]">
+                        +91 9347796811
+                      </span>
+                    </div>
+                  </div>
+
                   {/* Location */}
                   <div className="flex items-start gap-4">
                     <span className="text-xl">📍</span>
                     <div>
                       <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">Current Location</span>
                       <span className="text-sm font-semibold text-[var(--text-primary)]">
-                        Seoul, South Korea (Open to Remote Worldwide)
+                        Vijayawada, Andhra Pradesh, India (Open to Remote Worldwide)
                       </span>
                     </div>
                   </div>
@@ -167,18 +213,20 @@ export default function ContactSection() {
                       <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">Social Pipelines</span>
                       <div className="flex gap-4 mt-1">
                         <a
-                          href="https://linkedin.com/in/gongyoo"
+                          href="https://linkedin.com/in/murali-krishna-popuri"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs font-mono text-[var(--accent-secondary)] hover:underline"
+                          onMouseEnter={() => playSound("hover")}
                         >
                           LinkedIn
                         </a>
                         <a
-                          href="https://github.com/gongyoo"
+                          href="https://github.com/Muralikrishnapopuri"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs font-mono text-[var(--accent-secondary)] hover:underline"
+                          onMouseEnter={() => playSound("hover")}
                         >
                           GitHub
                         </a>
@@ -190,11 +238,11 @@ export default function ContactSection() {
 
               {/* Availability Indicator Badge */}
               <div className="mt-12 pt-6 border-t border-[rgba(255,255,255,0.05)] flex items-center gap-3">
-                <span className="status-dot" />
+                <span className="status-dot bg-emerald-500 animate-pulse" />
                 <div>
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">Availability Status</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block">Uptime / Availability</span>
                   <span className="text-xs font-semibold text-[var(--accent-secondary)]">
-                    Open to freelance projects and full-time opportunities
+                    Ready to deploy to your development team immediately
                   </span>
                 </div>
               </div>

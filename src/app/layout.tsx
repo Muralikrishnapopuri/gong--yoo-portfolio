@@ -21,9 +21,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Gong Yoo — Full Stack Web Developer",
+  title: "Murali Krishna Popuri — Full Stack Developer",
   description:
-    "Crafting powerful web experiences from front to back. Portfolio of Gong Yoo, a passionate full stack web developer based in Seoul, South Korea.",
+    "Portfolio of Murali Krishna Popuri, a Full-Stack Developer with 2 years of professional experience building scalable desktop systems, offline-first applications, and real-time web apps.",
   keywords: [
     "Full Stack Developer",
     "Web Developer",
@@ -31,13 +31,14 @@ export const metadata: Metadata = {
     "Next.js",
     "Node.js",
     "TypeScript",
+    "Electron",
+    "Murali Krishna Popuri",
     "Portfolio",
-    "Gong Yoo",
   ],
-  authors: [{ name: "Gong Yoo" }],
+  authors: [{ name: "Murali Krishna Popuri" }],
   openGraph: {
-    title: "Gong Yoo — Full Stack Web Developer",
-    description: "Crafting powerful web experiences from front to back.",
+    title: "Murali Krishna Popuri — Full Stack Developer",
+    description: "Building scalable desktop systems, real-time web apps, and hybrid offline-first ecosystems.",
     type: "website",
   },
 };

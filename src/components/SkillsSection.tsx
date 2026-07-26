@@ -2,77 +2,60 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playSound } from "@/utils/sound";
 
 // Skills Data
 const skillCategories = [
   {
-    title: "Frontend Development",
+    title: "Programming Languages",
     icon: "code",
-    color: "var(--accent-primary)",
+    color: "var(--accent-secondary)",
     skills: [
-      { name: "HTML5", level: 5 },
-      { name: "CSS3", level: 5 },
       { name: "JavaScript (ES6+)", level: 5 },
-      { name: "TypeScript", level: 4 },
-      { name: "React.js", level: 5 },
-      { name: "Next.js", level: 5 },
-      { name: "Tailwind CSS", level: 5 },
-      { name: "Redux", level: 4 },
-      { name: "Responsive Design", level: 5 },
-      { name: "Figma (UI/UX)", level: 4 },
+      { name: "TypeScript", level: 5 },
+      { name: "PHP", level: 4 },
+      { name: "SQL (PostgreSQL, MySQL, SQLite)", level: 5 },
+      { name: "HTML5 & CSS3", level: 5 },
     ],
   },
   {
-    title: "Backend Development",
+    title: "Frontend & Desktop",
+    icon: "monitor",
+    color: "var(--accent-primary)",
+    skills: [
+      { name: "React.js", level: 5 },
+      { name: "Next.js", level: 5 },
+      { name: "Electron", level: 5 },
+      { name: "Redux", level: 4 },
+      { name: "Tailwind CSS", level: 5 },
+      { name: "Bootstrap / Handlebars", level: 4 },
+    ],
+  },
+  {
+    title: "Backend & APIs",
     icon: "server",
-    color: "var(--accent-secondary)",
+    color: "var(--accent-tertiary)",
     skills: [
       { name: "Node.js", level: 5 },
       { name: "Express.js", level: 5 },
-      { name: "Python", level: 4 },
-      { name: "Django", level: 4 },
       { name: "REST APIs", level: 5 },
-      { name: "GraphQL", level: 4 },
       { name: "WebSockets", level: 4 },
-      { name: "JWT / OAuth", level: 5 },
+      { name: "Node-Cron & Multer", level: 4 },
+      { name: "Axios", level: 5 },
     ],
   },
   {
-    title: "Databases & Storage",
+    title: "Databases & Tools",
     icon: "database",
-    color: "var(--accent-tertiary)",
-    skills: [
-      { name: "MongoDB", level: 4 },
-      { name: "PostgreSQL", level: 5 },
-      { name: "MySQL", level: 4 },
-      { name: "Redis", level: 4 },
-      { name: "Firebase", level: 4 },
-    ],
-  },
-  {
-    title: "DevOps & Cloud Tools",
-    icon: "cloud",
-    color: "var(--accent-primary)",
-    skills: [
-      { name: "Git", level: 5 },
-      { name: "GitHub", level: 5 },
-      { name: "Docker", level: 4 },
-      { name: "CI/CD Pipelines", level: 4 },
-      { name: "AWS (EC2, S3)", level: 4 },
-      { name: "Vercel / Netlify", level: 5 },
-      { name: "Linux / Bash", level: 4 },
-    ],
-  },
-  {
-    title: "Other Skills",
-    icon: "settings",
     color: "var(--accent-secondary)",
     skills: [
-      { name: "Agile / Scrum", level: 5 },
-      { name: "TDD (Jest, Pytest)", level: 4 },
-      { name: "Performance Opt.", level: 5 },
-      { name: "SEO Best Practices", level: 5 },
-      { name: "Web Accessibility", level: 4 },
+      { name: "PostgreSQL", level: 5 },
+      { name: "SQLite", level: 5 },
+      { name: "MongoDB", level: 4 },
+      { name: "Redis", level: 4 },
+      { name: "Git & GitHub", level: 5 },
+      { name: "Postman & WorkBench", level: 5 },
+      { name: "Photoshop", level: 4 },
     ],
   },
 ];
@@ -81,23 +64,23 @@ const allSkillNames = [
   { name: "React.js", color: "rgba(62, 232, 181, 0.25)" },
   { name: "Next.js", color: "rgba(232, 168, 73, 0.25)" },
   { name: "TypeScript", color: "rgba(62, 232, 181, 0.25)" },
+  { name: "Electron", color: "rgba(232, 90, 110, 0.25)" },
   { name: "Node.js", color: "rgba(232, 90, 110, 0.25)" },
-  { name: "Python", color: "rgba(232, 168, 73, 0.25)" },
-  { name: "Django", color: "rgba(232, 90, 110, 0.25)" },
-  { name: "Tailwind CSS", color: "rgba(62, 232, 181, 0.25)" },
-  { name: "Redux", color: "rgba(232, 90, 110, 0.25)" },
-  { name: "MongoDB", color: "rgba(232, 168, 73, 0.25)" },
+  { name: "Express.js", color: "rgba(62, 232, 181, 0.25)" },
   { name: "PostgreSQL", color: "rgba(62, 232, 181, 0.25)" },
+  { name: "SQLite", color: "rgba(232, 168, 73, 0.25)" },
+  { name: "JavaScript", color: "rgba(62, 232, 181, 0.25)" },
+  { name: "PHP", color: "rgba(232, 90, 110, 0.25)" },
   { name: "MySQL", color: "rgba(232, 90, 110, 0.25)" },
-  { name: "Docker", color: "rgba(232, 168, 73, 0.25)" },
-  { name: "AWS", color: "rgba(62, 232, 181, 0.25)" },
-  { name: "GraphQL", color: "rgba(232, 90, 110, 0.25)" },
-  { name: "Git", color: "rgba(232, 168, 73, 0.25)" },
-  { name: "Figma", color: "rgba(62, 232, 181, 0.25)" },
-  { name: "WebSockets", color: "rgba(232, 90, 110, 0.25)" },
-  { name: "Vercel", color: "rgba(232, 168, 73, 0.25)" },
-  { name: "Firebase", color: "rgba(62, 232, 181, 0.25)" },
+  { name: "MongoDB", color: "rgba(232, 168, 73, 0.25)" },
   { name: "Redis", color: "rgba(232, 90, 110, 0.25)" },
+  { name: "Git", color: "rgba(232, 168, 73, 0.25)" },
+  { name: "GitHub", color: "rgba(62, 232, 181, 0.25)" },
+  { name: "Postman", color: "rgba(232, 168, 73, 0.25)" },
+  { name: "WebSockets", color: "rgba(232, 90, 110, 0.25)" },
+  { name: "REST APIs", color: "rgba(62, 232, 181, 0.25)" },
+  { name: "Redux", color: "rgba(232, 90, 110, 0.25)" },
+  { name: "Photoshop", color: "rgba(232, 168, 73, 0.25)" },
 ];
 
 interface PhysicsBody {
@@ -328,6 +311,7 @@ export default function SkillsSection() {
 
   // Mouse/Pointer Drag Handlers
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>, id: string) => {
+    playSound("click");
     if (!gravityActive || !sandboxRef.current) return;
     const target = e.currentTarget;
     const rect = sandboxRef.current.getBoundingClientRect();
@@ -393,10 +377,12 @@ export default function SkillsSection() {
             <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>
           </svg>
         );
-      case "cloud":
+      case "monitor":
         return (
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
           </svg>
         );
       case "settings":
@@ -581,7 +567,10 @@ export default function SkillsSection() {
                   {/* Physics Mode Toggles */}
                   <div className="flex items-center gap-3 p-1 my-1">
                     <button
-                      onClick={() => setGravityActive(!gravityActive)}
+                      onClick={() => {
+                        setGravityActive(!gravityActive);
+                        playSound("levelUp");
+                      }}
                       className={`console-btn ${gravityActive ? "active" : ""}`}
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1.5 inline-block">
@@ -590,7 +579,10 @@ export default function SkillsSection() {
                       {gravityActive ? "Disable Gravity" : "Enable Gravity"}
                     </button>
                     <button
-                      onClick={triggerShake}
+                      onClick={() => {
+                        triggerShake();
+                        playSound("click");
+                      }}
                       disabled={!gravityActive}
                       className="console-btn"
                       style={{ opacity: gravityActive ? 1 : 0.4 }}
