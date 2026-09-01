@@ -20,14 +20,14 @@ export default function SocialSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-[400px] shrink-0 flex justify-center"
+            className="w-full lg:w-[250px] shrink-0 flex justify-center"
           >
-            <div className="relative w-full max-w-[360px] aspect-square rounded-3xl overflow-hidden border border-[rgba(232,168,73,0.2)] shadow-[0_0_35px_rgba(232,168,73,0.1)] bg-[rgba(10,10,15,0.4)] group">
+            <div className="relative w-full max-w-[240px] aspect-square rounded-2xl overflow-hidden border border-[rgba(232,168,73,0.2)] shadow-[0_0_25px_rgba(232,168,73,0.1)] bg-[rgba(10,10,15,0.4)] group">
               <Image
                 src="/new_instaprofilecard_image_usethis_directly.jpg"
                 alt="Instagram Profile Card - Gong Yoo"
                 fill
-                sizes="(max-width: 1024px) 360px, 360px"
+                sizes="(max-width: 1024px) 240px, 240px"
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                 priority
               />

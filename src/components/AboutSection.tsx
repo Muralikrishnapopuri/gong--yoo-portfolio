@@ -24,12 +24,12 @@ export default function AboutSection() {
             <div className="about-article-grid font-sans">
               {/* Image Showcase Column */}
               <div className="about-image-col">
-                <div className="relative w-[280px] h-[350px] rounded-2xl overflow-hidden border border-[rgba(232,168,73,0.15)] shadow-[0_0_25px_rgba(232,168,73,0.08)] bg-[rgba(10,10,15,0.4)]">
+                <div className="relative w-[210px] h-[260px] rounded-2xl overflow-hidden border border-[rgba(232,168,73,0.15)] shadow-[0_0_20px_rgba(232,168,73,0.08)] bg-[rgba(10,10,15,0.4)] shrink-0">
                   <Image
                     src="/character_biography.jpg"
                     alt="Murali Krishna — Character Biography"
                     fill
-                    sizes="280px"
+                    sizes="210px"
                     className="object-cover w-full h-full"
                     priority
                   />

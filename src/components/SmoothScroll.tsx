@@ -11,25 +11,66 @@ export default function SmoothScroll({
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2,
-    });
+    let rafId: number;
+    let lenisInstance: Lenis | null = null;
 
-    lenisRef.current = lenis;
+    try {
+      lenisInstance = new Lenis({
+        duration: 1.1,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+        infinite: false,
+      });
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+      lenisRef.current = lenisInstance;
+
+      function raf(time: number) {
+        lenisInstance?.raf(time);
+        rafId = requestAnimationFrame(raf);
+      }
+
+      rafId = requestAnimationFrame(raf);
+
+      // Handle window resize
+      const handleResize = () => {
+        lenisInstance?.resize();
+      };
+      window.addEventListener("resize", handleResize);
+
+      // Smooth scroll on anchor link clicks
+      const handleAnchorClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement | null;
+        const anchor = target?.closest("a");
+        if (anchor) {
+          const href = anchor.getAttribute("href");
+          if (href && href.startsWith("#") && href.length > 1) {
+            const element = document.querySelector(href);
+            if (element) {
+              e.preventDefault();
+              lenisInstance?.scrollTo(element as HTMLElement, { offset: -60, duration: 1.2 });
+            }
+          }
+        }
+      };
+
+      document.addEventListener("click", handleAnchorClick);
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener("resize", handleResize);
+        document.removeEventListener("click", handleAnchorClick);
+        lenisInstance?.destroy();
+        lenisRef.current = null;
+      };
+    } catch (error) {
+      console.warn("SmoothScroll Lenis fallback to native:", error);
     }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
   }, []);
 
   return <>{children}</>;
 }
+

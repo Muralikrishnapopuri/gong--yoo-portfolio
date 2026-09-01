@@ -398,52 +398,39 @@ export default function SkillsSection() {
   };
 
   return (
-    <section id="skills" className="skills-section min-h-screen relative z-10 py-24 px-4">
+    <section id="skills" className="skills-section min-h-screen relative z-10 py-24 px-6">
       {/* Header Container */}
-      <div className="content-wrapper p-4 md:p-6 lg:p-8 my-4">
-        
+      <div className="content-wrapper">
         {/* Section Header */}
-        <div className="text-center mt-8 mb-16 flex flex-col items-center p-4">
+        <div className="text-center mb-12 flex flex-col items-center">
           <div className="section-divider mb-12 mx-auto" />
-          <div className="p-1 my-2">
-            <p
-              className="text-xs tracking-[0.3em] uppercase mb-4 text-center"
-              style={{
-                fontFamily: "var(--font-mono)",
-                color: "var(--accent-primary)",
-              }}
-            >
-              02. Specialization
-            </p>
-          </div>
-          <div className="p-2 my-2">
-            <h2
-              className="text-4xl md:text-5xl font-bold text-gradient-primary mb-6 text-center"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Core Expertise & Tech Stack
-            </h2>
-          </div>
-          <div className="p-2 mt-2 mb-10">
-            <p
-              className="text-sm md:text-base max-w-2xl mx-auto text-center"
-              style={{ color: "var(--text-secondary)", lineHeight: "1.8" }}
-            >
-              I synthesize full-stack engineering with polished UX/UI designs. Explore my core skills arranged below, drag individual elements, or activate the physics sandbox to play.
-            </p>
-          </div>
+          <p
+            className="text-xs tracking-[0.3em] uppercase mb-4 text-center font-mono text-[var(--accent-primary)]"
+          >
+            02. Specialization
+          </p>
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient-primary mb-4 text-center font-heading"
+          >
+            Core Expertise & Tech Stack
+          </h2>
+          <p
+            className="text-sm md:text-base max-w-2xl mx-auto text-center text-[var(--text-secondary)] leading-relaxed"
+          >
+            I synthesize full-stack engineering with polished UX/UI designs. Explore my core skills arranged below, drag individual elements, or activate the physics sandbox to play.
+          </p>
         </div>
       </div>
 
       {/* Full-Width Sliding Marquee (Outside content-wrapper for edge-to-edge flow) */}
-      <div className="marquee-wrapper mt-8 mb-16 pointer-events-none select-none py-4">
+      <div className="marquee-wrapper mb-12 pointer-events-none select-none py-2">
         {/* Row 1: Sliding Left */}
-        <div className="marquee-container mt-2 mb-4 py-2">
-          <div className="marquee-track track-left p-1 my-1">
+        <div className="marquee-container mb-3">
+          <div className="marquee-track track-left">
             {[...allSkillNames, ...allSkillNames].map((skill, i) => (
               <div
                 key={`mar-left-${i}`}
-                className="marquee-item p-2.5"
+                className="marquee-item"
                 style={{ borderColor: skill.color }}
               >
                 <span className="marquee-dot" />
@@ -454,12 +441,12 @@ export default function SkillsSection() {
         </div>
 
         {/* Row 2: Sliding Right */}
-        <div className="marquee-container my-2 py-2">
-          <div className="marquee-track track-right p-1 my-1">
+        <div className="marquee-container">
+          <div className="marquee-track track-right">
             {[...allSkillNames, ...allSkillNames].reverse().map((skill, i) => (
               <div
                 key={`mar-right-${i}`}
-                className="marquee-item p-2.5"
+                className="marquee-item"
                 style={{ borderColor: skill.color }}
               >
                 <span className="marquee-dot" />
@@ -471,15 +458,15 @@ export default function SkillsSection() {
       </div>
 
       {/* Main Grid Container */}
-      <div className="content-wrapper p-4 md:p-6 lg:p-8 my-6">
-        <div className="skills-layout-grid p-2 md:p-4 my-4">
+      <div className="content-wrapper">
+        <div className="skills-layout-grid">
           
           {/* LEFT: Categories Column */}
-          <div className="skills-categories-col p-2 my-2">
+          <div className="skills-categories-col">
             {skillCategories.map((category, idx) => (
               <div
                 key={category.title}
-                className="skill-card-wrap group p-1 my-4"
+                className="skill-card-wrap group"
                 style={{
                   animationDelay: `${idx * 0.15}s`,
                 }}
@@ -487,11 +474,11 @@ export default function SkillsSection() {
                 {/* Glow Border Effect */}
                 <div className="card-twinkle-glow" />
 
-                <div className="skill-card-inner p-6 md:p-8 my-1">
+                <div className="skill-card-inner p-5 sm:p-6">
                   {/* Card Header */}
-                  <div className="flex items-center gap-3 mt-2 mb-6 p-2">
+                  <div className="flex items-center gap-3 mb-4">
                     <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center p-2 my-1"
+                      className="w-9 h-9 rounded-lg flex items-center justify-center p-2"
                       style={{
                         background: `rgba(${category.color === "var(--accent-primary)" ? "232, 168, 73" : category.color === "var(--accent-secondary)" ? "62, 232, 181" : "232, 90, 110"}, 0.1)`,
                         border: `1px solid rgba(${category.color === "var(--accent-primary)" ? "232, 168, 73" : category.color === "var(--accent-secondary)" ? "62, 232, 181" : "232, 90, 110"}, 0.25)`,
@@ -500,13 +487,9 @@ export default function SkillsSection() {
                     >
                       {renderIcon(category.icon)}
                     </div>
-                    <div className="p-1 my-1">
+                    <div>
                       <h3
-                        className="font-bold text-lg"
-                        style={{
-                          fontFamily: "var(--font-heading)",
-                          color: "var(--text-primary)",
-                        }}
+                        className="font-bold text-base text-[var(--text-primary)] font-heading"
                       >
                         {category.title}
                       </h3>
@@ -514,11 +497,11 @@ export default function SkillsSection() {
                   </div>
 
                   {/* Skills Chips Grid */}
-                  <div className="flex flex-wrap gap-2.5 p-2 my-3">
+                  <div className="flex flex-wrap gap-2">
                     {category.skills.map((skill) => (
                       <motion.div
                         key={skill.name}
-                        className="skill-chip cursor-grab active:cursor-grabbing select-none px-4 py-2"
+                        className="skill-chip cursor-grab active:cursor-grabbing select-none px-3.5 py-1.5"
                         style={{
                           "--chip-color": category.color,
                         } as React.CSSProperties}
@@ -542,30 +525,29 @@ export default function SkillsSection() {
           </div>
 
           {/* RIGHT: Physics Playground Column (Fall Elements & Draggable Elements) */}
-          <div className="skills-playground-col p-2 my-2">
-            <div className="physics-console-card p-1 my-4">
+          <div className="skills-playground-col">
+            <div className="physics-console-card">
               <div className="card-twinkle-glow" />
-              <div className="physics-console-inner p-6 md:p-8 my-1">
+              <div className="physics-console-inner p-5 sm:p-6">
                 
                 {/* Console Header */}
-                <div className="flex flex-wrap items-center justify-between gap-4 mt-2 mb-6 border-b border-[rgba(232,168,73,0.1)] p-2 pb-4">
-                  <div className="flex items-center gap-3 p-1 my-1">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-[rgba(232,168,73,0.1)] pb-3">
+                  <div className="flex items-center gap-2.5">
                     <div className="console-indicator animate-pulse" />
-                    <div className="p-1 my-1">
+                    <div>
                       <h3
-                        className="font-bold font-heading text-lg"
-                        style={{ color: "var(--text-primary)" }}
+                        className="font-bold font-heading text-base text-[var(--text-primary)]"
                       >
                         Interactive Physics Sandbox
                       </h3>
-                      <p className="text-xs" style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
+                      <p className="text-[11px] font-mono text-[var(--text-muted)]">
                         SYSTEM_STATUS: {gravityActive ? "PHYSICS_ENGINE_ACTIVE" : "IDLE"}
                       </p>
                     </div>
                   </div>
                   
                   {/* Physics Mode Toggles */}
-                  <div className="flex items-center gap-3 p-1 my-1">
+                  <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
                         setGravityActive(!gravityActive);
@@ -598,7 +580,7 @@ export default function SkillsSection() {
                 {/* Physics Box Screen */}
                 <div
                   ref={sandboxRef}
-                  className="physics-screen p-4 my-4"
+                  className="physics-screen my-2"
                   style={{
                     position: "relative",
                     height: "360px",
@@ -607,7 +589,7 @@ export default function SkillsSection() {
                   }}
                 >
                   {/* Grid overlay background inside sandbox */}
-                  <div className="physics-grid-overlay p-1 my-1" />
+                  <div className="physics-grid-overlay" />
                   
                   <AnimatePresence>
                     {!gravityActive && (
@@ -672,7 +654,7 @@ export default function SkillsSection() {
 
                 {/* Spawn Custom Chip Form */}
                 {gravityActive && (
-                  <form onSubmit={handleAddCustomSkill} className="flex gap-2 mt-4 mb-2 p-2 pt-4 border-t border-[rgba(232,168,73,0.1)]">
+                  <form onSubmit={handleAddCustomSkill} className="flex gap-2 mt-3 pt-3 border-t border-[rgba(232,168,73,0.1)]">
                     <input
                       type="text"
                       placeholder="Add a custom skill to the sandbox..."

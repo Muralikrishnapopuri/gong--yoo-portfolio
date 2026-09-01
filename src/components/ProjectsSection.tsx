@@ -203,7 +203,7 @@ export default function ProjectsSection() {
                 src="/inventory_vault.jpg"
                 alt="Murali Krishna — Projects Accent"
                 fill
-                sizes="(max-width: 1024px) 320px, 320px"
+                sizes="(max-width: 1024px) 220px, 220px"
                 className="object-cover"
                 priority
               />

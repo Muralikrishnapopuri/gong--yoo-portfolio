@@ -57,12 +57,12 @@ export default function ExperienceSection() {
   return (
     <section id="experience" className="experience-section min-h-screen relative overflow-hidden py-24 px-6 flex items-center">
       {/* Floating decorative image badge */}
-      <div className="absolute top-8 right-8 w-16 h-16 rounded-full overflow-hidden border border-[rgba(232,168,73,0.2)] shadow-[0_0_15px_rgba(232,168,73,0.1)] flex items-center justify-center bg-[rgba(10,10,15,0.6)] backdrop-blur-md z-20 group hover:scale-110 transition-transform duration-300">
+      <div className="absolute top-8 right-8 w-12 h-12 rounded-full overflow-hidden border border-[rgba(232,168,73,0.2)] shadow-[0_0_15px_rgba(232,168,73,0.1)] flex items-center justify-center bg-[rgba(10,10,15,0.6)] backdrop-blur-md z-20 group hover:scale-110 transition-transform duration-300">
         <Image
           src="/character_biography.jpg"
           alt="Murali Krishna Profile accent"
-          width={64}
-          height={64}
+          width={48}
+          height={48}
           className="object-cover w-full h-full rounded-full grayscale hover:grayscale-0 transition-all duration-500"
         />
       </div>

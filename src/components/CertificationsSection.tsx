@@ -113,16 +113,16 @@ export default function CertificationsSection() {
           </div>
 
           {/* Right: Small achievements accent image */}
-          <div className="lg:w-[320px] w-full shrink-0 flex items-center justify-center">
+          <div className="lg:w-[220px] w-full shrink-0 flex items-center justify-center">
             <div 
-              className="relative w-full max-w-[320px] aspect-[3/4] rounded-2xl overflow-hidden border border-[rgba(232,168,73,0.15)] shadow-[0_0_25px_rgba(232,168,73,0.08)] bg-[rgba(10,10,15,0.4)]"
-              style={{ minHeight: "340px" }}
+              className="relative w-full max-w-[220px] aspect-[3/4] rounded-2xl overflow-hidden border border-[rgba(232,168,73,0.15)] shadow-[0_0_20px_rgba(232,168,73,0.08)] bg-[rgba(10,10,15,0.4)]"
+              style={{ minHeight: "260px" }}
             >
               <Image
                 src="/professional_achievements.jpg"
                 alt="Murali Krishna — Professional Achievements Accent"
                 fill
-                sizes="(max-width: 1024px) 320px, 320px"
+                sizes="(max-width: 1024px) 220px, 220px"
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                 priority
               />
